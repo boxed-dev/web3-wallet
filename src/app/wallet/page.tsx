@@ -106,7 +106,7 @@ export default function WalletPage() {
     
     try {
       // Try new multi-wallet format first
-      let encryptedStorage = localStorage.getItem("web3_wallets");
+      const encryptedStorage = localStorage.getItem("web3_wallets");
       let storage: WalletStorage;
       
       if (encryptedStorage) {

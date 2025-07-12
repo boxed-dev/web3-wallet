@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,7 +37,7 @@ interface WalletStorage {
 }
 
 
-export default function WalletPage() {
+function WalletPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isLogin = searchParams.get('action') === 'login';
@@ -796,5 +796,18 @@ export default function WalletPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WalletPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading wallet...</p>
+      </div>
+    </div>}>
+      <WalletPageContent />
+    </Suspense>
   );
 }

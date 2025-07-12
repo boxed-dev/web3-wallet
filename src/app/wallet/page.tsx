@@ -49,7 +49,6 @@ export default function WalletPage() {
   const [activeWallet, setActiveWallet] = useState<WalletData | null>(null);
   const [showPrivateKeys, setShowPrivateKeys] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasExistingWallet, setHasExistingWallet] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [newWalletName, setNewWalletName] = useState("");
   const [editingWalletId, setEditingWalletId] = useState<string | null>(null);
@@ -65,8 +64,11 @@ export default function WalletPage() {
   ];
 
   useEffect(() => {
+    // Check for existing wallets on mount
     const existingStorage = localStorage.getItem("web3_wallets");
-    setHasExistingWallet(!!existingStorage);
+    if (existingStorage) {
+      // Wallet exists, user can login
+    }
   }, []);
 
   const saveWalletStorage = (storage: WalletStorage) => {

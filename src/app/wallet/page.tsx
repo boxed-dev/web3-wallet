@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -158,7 +158,7 @@ export default function WalletPage() {
       }
       
       setStep(3);
-    } catch (error) {
+    } catch {
       setLoginError("Invalid password. Please try again.");
     } finally {
       setIsLoading(false);
@@ -205,7 +205,7 @@ export default function WalletPage() {
     }
   };
 
-  const fetchSolanaBalance = async (address: string) => {
+  const fetchSolanaBalance = useCallback(async (address: string) => {
     try {
       const publicKey = new PublicKey(address);
       const balance = await solanaConnection.getBalance(publicKey);
@@ -214,7 +214,7 @@ export default function WalletPage() {
       console.error("Error fetching Solana balance:", error);
       return 0;
     }
-  };
+  }, [solanaConnection]);
 
 
   useEffect(() => {
@@ -222,7 +222,7 @@ export default function WalletPage() {
     if (step === 3 && activeWallet?.sol?.address) {
       fetchSolanaBalance(activeWallet.sol.address).then(setSolanaBalance).catch(() => setSolanaBalance(0));
     }
-  }, [step, activeWallet]);
+  }, [step, activeWallet, fetchSolanaBalance]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -466,7 +466,7 @@ export default function WalletPage() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Backup Seed Phrase</CardTitle>
-        <CardDescription>Write down your recovery phrase for "{activeWallet?.name}"</CardDescription>
+        <CardDescription>Write down your recovery phrase for &ldquo;{activeWallet?.name}&rdquo;</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Alert>
